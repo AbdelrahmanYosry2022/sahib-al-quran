@@ -1,15 +1,129 @@
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;700;900&display=swap');
+@font-face {
+  font-family: 'Graphik Arabic';
+  src: url('/fonts/GRAPHIK%20ARABIC%20THIN.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Arabic';
+  src: url('/fonts/GRAPHIK%20ARABIC%20EXTRALIGHT.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Arabic';
+  src: url('/fonts/GRAPHIK%20ARABIC%20LIGHT.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Arabic';
+  src: url('/fonts/GRAPHIK%20ARABIC.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Arabic';
+  src: url('/fonts/GRAPHIK%20ARABIC%20MEDIUM.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Arabic';
+  src: url('/fonts/GRAPHIK%20ARABIC%20SEMIBOLD.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Arabic';
+  src: url('/fonts/GRAPHIK%20ARABIC%20BOLD.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Graphik Arabic';
+  src: url('/fonts/GRAPHIK%20ARABIC%20BLACK.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: 'Noto Sans Arabic', sans-serif;
+  --app-bg: #FFFFFF;
+  --card-orange: #FFE5D4;
+  --card-purple: #E8E1FF;
+  --card-green: #D4FADA;
+  --card-blue: #D6F1FF;
+  --card-pink: #FFD6E8;
+  --text-main: #000000;
+  --text-muted: #86868B;
+  --border-light: #F2F2F7;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  direction: rtl;
+@layer base {
+
+  *,
+  *::before,
+  *::after {
+    font-family: 'Graphik Arabic', sans-serif !important;
+  }
+
+  html,
+  body {
+    @apply h-full m-0 p-0 overflow-hidden antialiased;
+    background-color: var(--app-bg);
+    font-family: 'Graphik Arabic', sans-serif !important;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font-family: 'Graphik Arabic', sans-serif !important;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer components {
+  .bento-card {
+    @apply rounded-[20px] p-5 transition-transform duration-200 active:scale-[0.99] border-none;
+  }
+
+  .flat-button {
+    @apply rounded-[12px] px-4 py-2 font-semibold transition-all;
+  }
+
+  .nav-item {
+    @apply p-2 rounded-xl transition-colors text-slate-400 hover:bg-slate-50;
+  }
+}
+
+.font-graphik {
+  font-family: 'Graphik Arabic', sans-serif !important;
 }

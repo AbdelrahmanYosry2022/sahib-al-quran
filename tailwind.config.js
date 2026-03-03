@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        amiri: ['Amiri', 'serif'],
-        noto: ['Noto Sans Arabic', 'sans-serif'],
+        sans: ['"Graphik Arabic"', 'sans-serif'],
+        graphik: ['"Graphik Arabic"', 'sans-serif'],
       },
     },
   },
