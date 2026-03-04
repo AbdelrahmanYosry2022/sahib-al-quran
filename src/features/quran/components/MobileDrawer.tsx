@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { SURAH_LIST } from '../constants/surah-list';
 
@@ -26,7 +26,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-[85%] max-w-[340px] bg-[#F9E6D3] z-[60] transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] transform ${isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 h-full w-[85%] max-w-[340px] bg-[#fde2c5] z-[60] transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] transform ${isOpen ? 'translate-x-0' : 'translate-x-full'
           } shadow-2xl`}
         dir="rtl"
       >

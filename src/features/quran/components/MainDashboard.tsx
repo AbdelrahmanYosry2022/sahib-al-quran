@@ -40,7 +40,7 @@ export const MainDashboard: React.FC = () => {
       />
 
       {/* Persistent Sidebar (Desktop Only) */}
-      <aside className="hidden lg:flex w-[320px] h-full flex-col z-40 bg-transparent border-l border-[#1D1B4B]/5">
+      <aside className="hidden lg:flex w-[320px] h-full flex-col z-40 bg-[#fde2c5] border-l border-[#1D1B4B]/5">
         <SurahSidebar onSelect={handleSelectSurah} selectedId={selectedSurahId} />
       </aside>
 
