@@ -6,22 +6,56 @@ import { SurahTabs } from './SurahTabs';
 import { MobileDrawer } from './MobileDrawer';
 import {
   Menu,
-  Settings,
-  User,
   BookOpen,
-  Calendar,
-  Layers,
   Home,
   Compass,
-  Quote
+  MapPin,
+  MessageCircle,
+  PenTool,
+  Bookmark,
+  Layout,
+  Book,
+  Star,
+  Flame,
+  Search,
+  Sparkles
 } from 'lucide-react';
 
 type DashboardView = 'home' | 'tadabbur' | 'mushaf' | 'profile';
+
+// Helper component for the icon greed bubbles
+const IconBubble: React.FC<{ icon: React.ReactNode, bgColor: string, iconColor: string, label: string }> = ({ icon, bgColor, iconColor, label }) => (
+  <div className="flex flex-col items-center gap-2">
+    <div className={`w-14 h-14 rounded-[22px] flex items-center justify-center transition-transform hover:scale-105 cursor-pointer`} style={{ backgroundColor: bgColor, color: iconColor }}>
+      {icon}
+    </div>
+    <span className="text-[10px] font-bold text-[#1D1B4B]/40">{label}</span>
+  </div>
+);
+
+// Progress Circle for the list items
+const CircularProgress: React.FC<{ percentage: number, color: string }> = ({ percentage, color }) => {
+  const radius = 10;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percentage / 100) * circumference;
+  return (
+    <div className="relative w-8 h-8 flex items-center justify-center">
+      <svg className="w-full h-full transform -rotate-90">
+        <circle cx="16" cy="16" r={radius} fill="transparent" stroke="#F1F1F1" strokeWidth="3" />
+        <circle
+          cx="16" cy="16" r={radius} fill="transparent" stroke={color} strokeWidth="3"
+          strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
+        />
+      </svg>
+    </div>
+  );
+};
 
 export const MainDashboard: React.FC = () => {
   const { selectedSurah, selectedSurahId, selectSurah } = useSurahDetails(1);
   const { isDrawerOpen, toggleDrawer, closeDrawer } = useNavigation();
   const [currentView, setCurrentView] = useState<DashboardView>('home');
+  const [activeTab, setActiveTab] = useState<'popular' | 'rising'>('popular');
 
   const handleSelectSurah = (id: number) => {
     selectSurah(id);
@@ -29,203 +63,176 @@ export const MainDashboard: React.FC = () => {
     closeDrawer();
   };
 
-  return (
-    <div className="flex h-screen w-full bg-[#fde2c5] overflow-hidden font-graphik antialiased text-[#1D1B4B]" dir="rtl">
-      {/* Mobile Drawer */}
-      <MobileDrawer
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-        onSelect={handleSelectSurah}
-        selectedId={selectedSurahId}
-      />
+  const surahs = [
+    { id: 2, name: 'البقرة', sub: 'سورة مدنية - الآية ١٥', progress: 45, color: '#FFD166' },
+    { id: 3, name: 'آل عمران', sub: 'سورة مدنية - الآية ٢٢', progress: 12, color: '#FFD166' },
+    { id: 4, name: 'النساء', sub: 'سورة مدنية - لم تبدأ بعد', progress: 0, color: '#FFD166' },
+    { id: 1, name: 'الفاتحة', sub: 'سورة مكية - فاتحة الكتاب', progress: 100, color: '#EF476F' },
+  ];
 
-      {/* Persistent Sidebar (Desktop Only) */}
-      <aside className="hidden lg:flex w-[320px] h-full flex-col z-40 bg-[#fde2c5] border-l border-[#1D1B4B]/5">
+  return (
+    <div className="flex h-screen w-full bg-[#F5F7FB] font-graphik antialiased text-[#1D1B4B]" dir="rtl">
+      {/* Sidebar - Remains for Desktop */}
+      <MobileDrawer isOpen={isDrawerOpen} onClose={closeDrawer} onSelect={handleSelectSurah} selectedId={selectedSurahId} />
+      <aside className="hidden lg:flex w-[320px] h-full flex-col bg-white border-l border-gray-100">
         <SurahSidebar onSelect={handleSelectSurah} selectedId={selectedSurahId} />
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-full relative overflow-hidden">
 
-        {/* Modern Minimal Header */}
-        <header className="h-[90px] flex items-center justify-between px-6 lg:px-12 z-30">
-          <div className="flex items-center gap-4">
-            <div className="h-10 animate-in fade-in duration-1000">
-              <img
-                src="/images/Sahib Al Quran.png"
-                alt="صاحب القرآن"
-                className="h-full object-contain"
-              />
-            </div>
+        {/* Transparent Minimal Header */}
+        <header className="h-[70px] flex items-center justify-between px-6 lg:px-10 shrink-0 z-30">
+          <button className="w-10 h-10 flex items-center justify-center lg:hidden" onClick={toggleDrawer}>
+            <Menu size={20} />
+          </button>
+          <div className="flex-1 lg:flex-none flex justify-center lg:justify-start">
+            <img src="/images/Sahib Al Quran.png" alt="صاحب القرآن" className="h-7 object-contain" />
           </div>
-
-          <div className="flex items-center gap-3">
-            <button className="w-10 h-10 flex items-center justify-center nav-item lg:hidden shadow-none border-none bg-transparent" onClick={toggleDrawer}>
-              <Menu size={20} className="text-[#1D1B4B]" />
-            </button>
-            <button className="w-10 h-10 items-center justify-center nav-item hidden lg:flex shadow-none border-none bg-transparent">
-              <Settings size={20} className="text-[#1D1B4B]/30" />
-            </button>
-          </div>
+          <button className="w-10 h-10 flex items-center justify-center">
+            <Search size={20} className="text-gray-400" />
+          </button>
         </header>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide pb-32">
-          <div className="max-w-5xl mx-auto px-6 lg:px-12 py-8">
+        {/* Scrollable Area */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
+          <div className="max-w-[500px] mx-auto px-6 py-4 space-y-8 pb-32">
 
             {currentView === 'home' && (
-              <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 space-y-10">
-                {/* Greeting Hero */}
-                <div>
-                  <h1 className="text-5xl lg:text-7xl font-black text-[#1D1B4B] leading-tight tracking-tight">
-                    قُرآنٌ <span className="text-[#FF6B4A]">لِبِناءِ</span> <span className="text-[#E91E63]">الإِنسان.</span>
-                  </h1>
+              <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
+
+                {/* 1. Hero Card - THEME REPLICATION */}
+                <div className="relative mb-8 pt-10">
+                  {/* Background Decorative Element */}
+                  <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#e2e8ff] to-transparent rounded-t-[40px] -z-10 opacity-60 overflow-hidden">
+                    <div className="absolute top-4 right-8 flex gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-white/40 backdrop-blur-sm transform rotate-12"></div>
+                      <div className="w-10 h-10 rounded-full bg-pink-100/40 backdrop-blur-sm -mt-2"></div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-[32px] p-8 shadow-sm border border-white relative">
+                    {/* Floating Sticker Icon */}
+                    <div className="absolute -top-6 -left-2 flex gap-1">
+                      <div className="p-2 bg-white rounded-xl shadow-md rotate-[-15deg] border border-gray-50">
+                        <Star size={18} className="text-pink-400 fill-pink-400" />
+                      </div>
+                      <div className="p-2 bg-white rounded-xl shadow-md rotate-[10deg] border border-gray-50 scale-110">
+                        <Sparkles size={18} className="text-green-400 fill-green-400" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-orange-100 p-1">
+                        <div className="w-full h-full rounded-full bg-gray-200 overflow-hidden">
+                          <img src="/images/Sahib Al Quran.png" className="w-full h-full object-cover scale-150" alt="Avatar" />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        {/* Horizontal Progress Bar */}
+                        <div className="h-6 w-full bg-[#FFF8E7] rounded-full relative overflow-hidden p-1">
+                          <div className="h-full bg-gradient-to-r from-[#FFB84C] to-[#FFD89C] rounded-full" style={{ width: '65%' }}></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center">
+                          <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                        </div>
+                        <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">المستوى الأول</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-2xl font-black text-[#1D1B4B]">مرحباً، {selectedSurah.name}</h2>
+                        <div className="p-2.5 bg-[#E8F1FF] rounded-xl text-[#4C8DFF]">
+                          <PenTool size={18} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Featured Quote Card - Minimalist */}
-                <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-[40px] p-8 lg:p-12 flex flex-col md:flex-row items-center gap-10 group hover:bg-white/60 transition-all duration-500">
-                  <div className="w-16 h-16 rounded-full bg-[#1D1B4B] flex items-center justify-center text-[#fde2c5] shrink-0">
-                    <Quote size={24} />
-                  </div>
-                  <div className="flex-1 text-center md:text-right">
-                    <p className="text-2xl lg:text-3xl font-black text-[#1D1B4B] leading-relaxed mb-4">
-                      "أَفَلَا يَتَدَبَّرُونَ الْقُرْآنَ أَمْ عَلَى قلوبٍ أَقْفَالُهَا"
-                    </p>
-                    <p className="text-[10px] font-black text-[#1D1B4B]/30 uppercase tracking-[0.4em]">سورة محمد | آية ٢٤</p>
-                  </div>
-                  <button className="px-8 py-4 bg-[#FF6B4A] text-white rounded-full text-[12px] font-black uppercase tracking-widest cursor-pointer hover:bg-[#ff552e] hover:shadow-xl hover:shadow-[#FF6B4A]/20 transition-all duration-300">
-                    ابدأ التدبر
+                {/* 2. Icon Grid Bubble Styling */}
+                <div className="grid grid-cols-4 gap-y-6 mb-10">
+                  <IconBubble label="التدبر" icon={<Bookmark size={22} />} bgColor="#F0E6FF" iconColor="#9B66FF" />
+                  <IconBubble label="الموقع" icon={<MapPin size={22} />} bgColor="#E3F9EC" iconColor="#49C18B" />
+                  <IconBubble label="المجتمع" icon={<MessageCircle size={22} />} bgColor="#FEF7E1" iconColor="#F1C40F" />
+                  <IconBubble label="تحدي" icon={<Layout size={22} />} bgColor="#FFF1F1" iconColor="#FF6B6B" />
+
+                  <IconBubble label="مفكرة" icon={<PenTool size={22} />} bgColor="#FEFBEA" iconColor="#E67E22" />
+                  <IconBubble label="ملفي" icon={<MessageCircle size={22} fill="#A29BFE" />} bgColor="#F2F3FF" iconColor="#5F27CD" />
+                  <IconBubble label="أذكار" icon={<Book size={22} />} bgColor="#FFF3E0" iconColor="#E67E22" />
+                  <IconBubble label="إرشاد" icon={<Bookmark size={22} fill="#55E6C1" />} bgColor="#E3F9EC" iconColor="#009432" />
+                </div>
+
+                {/* 3. Filter Tab - Pill-shaped Segmented UI */}
+                <div className="bg-[#F2F2F2] p-1 rounded-2xl flex items-center mb-6">
+                  <button
+                    onClick={() => setActiveTab('popular')}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all font-bold text-xs ${activeTab === 'popular' ? 'bg-white shadow-sm text-[#1D1B4B]' : 'text-gray-400'}`}
+                  >
+                    <Flame size={16} className={activeTab === 'popular' ? 'text-orange-500' : ''} />
+                    الأكثر شعبية
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('rising')}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all font-bold text-xs ${activeTab === 'rising' ? 'bg-white shadow-sm text-[#1D1B4B]' : 'text-gray-400'}`}
+                  >
+                    <Star size={16} className={activeTab === 'rising' ? 'text-orange-500 shadow-sm shadow-orange-200' : ''} />
+                    مقترح لك
                   </button>
                 </div>
 
-                {/* Creative Minimal Grid */}
-                <div className="grid grid-cols-12 gap-8">
-
-                  {/* Large Progress Card */}
-                  <div className="col-span-12 lg:col-span-12 bg-white/40 border border-white/60 rounded-[40px] p-10 flex flex-col md:flex-row items-center justify-between gap-10">
-                    <div className="md:w-1/2 text-right">
-                      <h3 className="text-2xl font-black text-[#1D1B4B] mb-3">رحلتك الإيمانية</h3>
-                      <p className="text-base text-[#1D1B4B]/60 font-medium leading-relaxed">أتممت قراءة ٢٤ صفحة من وردك اليومي بتركيز. استمر في هذا المسار النوراني.</p>
-                    </div>
-                    <div className="flex items-end gap-4 h-28 w-full md:w-auto">
-                      {[35, 65, 40, 85, 55, 75, 50].map((h, i) => (
-                        <div
-                          key={i}
-                          className={`w-12 rounded-2xl transition-all duration-500 cursor-pointer ${i === 3 ? 'bg-[#FF6B4A]' : 'bg-[#1D1B4B]/5 hover:bg-[#1D1B4B]/20'}`}
-                          style={{ height: `${h}%` }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Smaller Square Elements */}
-                  <div className="col-span-12 md:col-span-6 lg:col-span-4 bg-white/40 border border-white/60 rounded-[40px] p-10 min-h-[280px] flex flex-col justify-between cursor-pointer group hover:bg-[#DCD6FF]/40 active:scale-[0.98] transition-all duration-500" onClick={() => handleSelectSurah(selectedSurahId)}>
-                    <div className="w-12 h-12 rounded-2xl bg-[#1D1B4B]/10 flex items-center justify-center text-[#1D1B4B]">
-                      <Compass size={24} />
-                    </div>
-                    <div>
-                      <p className="text-[#1D1B4B]/40 text-[11px] font-black uppercase tracking-widest mb-3">نقطة الوصول</p>
-                      <h3 className="text-3xl font-black text-[#1D1B4B]">سورة {selectedSurah.name}</h3>
-                      <p className="text-[10px] font-black text-[#1D1B4B]/60 mt-4 uppercase tracking-wider flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#FF6B4A] animate-pulse"></span>
-                        استئناف القراءة الآن
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="col-span-12 md:col-span-6 lg:col-span-4 bg-white/40 border border-white/60 rounded-[40px] p-10 min-h-[280px] flex flex-col justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-[#00695C]/10 flex items-center justify-center text-[#00695C]">
-                      <Calendar size={24} />
-                    </div>
-                    <div>
-                      <p className="text-[#00695C]/40 text-[11px] font-black uppercase tracking-widest mb-3">تحدي اليوم</p>
-                      <h3 className="text-xl lg:text-2xl font-black text-[#1D1B4B] leading-snug">هل قرأت الورد الصباحي بتمعن وفكر؟</h3>
-                      <div className="flex gap-4 mt-8">
-                        <button className="px-8 py-3 bg-[#00695C] text-white rounded-full text-[11px] font-black uppercase tracking-widest cursor-pointer hover:shadow-lg hover:shadow-[#00695C]/20 transition-all">نعم</button>
-                        <button className="px-8 py-3 bg-transparent border border-[#00695C]/20 text-[#00695C] rounded-full text-[11px] font-black uppercase tracking-widest cursor-pointer hover:bg-[#00695C]/5 transition-all">لاحقاً</button>
+                {/* 4. Surah List Section */}
+                <div className="space-y-3">
+                  {surahs.map((surah, idx) => (
+                    <div key={surah.id} className="bg-white p-4 rounded-2xl flex items-center gap-4 group transition-all hover:bg-gray-50/50">
+                      <div className={`w-12 h-12 rounded-[18px] flex items-center justify-center ${idx === 3 ? 'bg-green-100' : 'bg-red-50'}`}>
+                        <div className={`w-8 h-8 rounded-lg ${idx === 3 ? 'bg-green-500' : 'bg-red-400'} flex items-center justify-center text-white text-[10px] font-black`}>
+                          {surah.id}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-
-                  <div className="col-span-12 lg:col-span-4 bg-white/40 border border-white/60 rounded-[40px] p-10 min-h-[280px] flex flex-col justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-[#E91E63]/10 flex items-center justify-center text-[#E91E63]">
-                      <Layers size={24} />
-                    </div>
-                    <div>
-                      <p className="text-[#E91E63]/40 text-[11px] font-black uppercase tracking-widest mb-3">إحصائياتك</p>
-                      <div className="flex items-baseline gap-3">
-                        <span className="text-5xl font-black text-[#1D1B4B]">{selectedSurah.versesCount}</span>
-                        <span className="text-[11px] font-black text-[#1D1B4B]/40 uppercase tracking-widest">آية مدروسة</span>
+                      <div className="flex-1 text-right">
+                        <h4 className="text-sm font-black text-[#1D1B4B]">{surah.name}</h4>
+                        <p className="text-[10px] font-bold text-gray-300 mt-0.5">{surah.sub}</p>
                       </div>
-                      <p className="text-[10px] font-black text-[#1D1B4B]/40 mt-3 uppercase tracking-[0.2em]">النزول: {selectedSurah.revelationType === 'MAKKI' ? 'مكة المكرمة' : 'المدينة المنورة'}</p>
+                      {idx === 3 ? (
+                        <button className="px-6 py-2.5 bg-[#FF6B4A] text-white rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-orange-100">
+                          ابدأ
+                        </button>
+                      ) : (
+                        <CircularProgress percentage={surah.progress} color="#FFB84C" />
+                      )}
                     </div>
-                  </div>
-
+                  ))}
                 </div>
+
               </div>
             )}
 
             {currentView === 'tadabbur' && (
-              <div className="animate-in fade-in slide-in-from-left-6 duration-700">
-                <div className="mb-12 text-right">
-                  <h2 className="text-5xl lg:text-6xl font-black text-[#1D1B4B] tracking-tight leading-tight">تأملات <br /> {selectedSurah.name}</h2>
+              <div className="animate-in fade-in duration-700">
+                <div className="mb-10 text-right">
+                  <h2 className="text-4xl lg:text-5xl font-black text-[#1D1B4B]">تأملات {selectedSurah.name}</h2>
                 </div>
                 <SurahTabs surah={selectedSurah} />
-              </div>
-            )}
-
-            {currentView === 'mushaf' && (
-              <div className="flex flex-col items-center justify-center py-32 text-center animate-in fade-in duration-700 px-4">
-                <div className="w-24 h-24 bg-white/40 border border-white/60 rounded-[40px] flex items-center justify-center text-[#1D1B4B]/10 mb-8">
-                  <BookOpen size={48} />
-                </div>
-                <h2 className="text-4xl font-black text-[#1D1B4B]">المصحف التفاعلي</h2>
-                <p className="text-[#1D1B4B]/40 text-lg mt-6 max-w-sm leading-relaxed font-medium">نعمل على بناء تجربة تصفح فريدة لكتاب الله، مريحة للعين ومعينة على التدبر والتعمق.</p>
-              </div>
-            )}
-
-            {currentView === 'profile' && (
-              <div className="flex flex-col items-center justify-center py-32 text-center animate-in fade-in duration-700 px-4">
-                <div className="w-24 h-24 bg-white/40 border border-white/60 rounded-[32px] flex items-center justify-center text-[#1D1B4B]/10 mb-8">
-                  <User size={48} />
-                </div>
-                <h2 className="text-4xl font-black text-[#1D1B4B]">الملف الشخصي</h2>
-                <p className="text-[#1D1B4B]/40 text-lg mt-6 max-w-sm leading-relaxed font-medium">هنا ستجد إحصائياتك، أهدافك، وما أنجزته من تدبر وحفظ بمرور الوقت مع صاحب القرآن.</p>
               </div>
             )}
 
           </div>
         </div>
 
-        {/* Minimal Static Bottom Nav */}
-        <div className="fixed bottom-0 left-0 right-0 h-[100px] bg-[#fde2c5]/90 backdrop-blur-xl border-t border-white/20 flex items-center justify-around px-8 z-50 lg:hidden shadow-none">
-          <button
-            onClick={() => setCurrentView('home')}
-            className={`flex flex-col items-center gap-2 transition-all duration-300 ${currentView === 'home' ? 'text-[#1D1B4B] scale-110' : 'text-[#1D1B4B]/20 hover:text-[#1D1B4B]/40'}`}
-          >
-            <Home size={24} strokeWidth={currentView === 'home' ? 2.5 : 2} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">البداية</span>
+        {/* Static Footer Navigation Bar */}
+        <div className="fixed bottom-0 left-0 right-0 h-[85px] bg-white border-t border-gray-100 flex items-center justify-around px-8 shrink-0 z-40 lg:hidden">
+          <button onClick={() => setCurrentView('home')} className={`flex flex-col items-center gap-1.5 transition-all ${currentView === 'home' ? 'text-[#FF6B4A]' : 'text-gray-300'}`}>
+            <Home size={22} strokeWidth={3} />
           </button>
-          <button
-            onClick={() => setCurrentView('tadabbur')}
-            className={`flex flex-col items-center gap-2 transition-all duration-300 ${currentView === 'tadabbur' ? 'text-[#1D1B4B] scale-110' : 'text-[#1D1B4B]/20 hover:text-[#1D1B4B]/40'}`}
-          >
-            <Compass size={24} strokeWidth={currentView === 'tadabbur' ? 2.5 : 2} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">التدبر</span>
+          <button onClick={() => setCurrentView('tadabbur')} className={`flex flex-col items-center gap-1.5 transition-all ${currentView === 'tadabbur' ? 'text-[#FF6B4A]' : 'text-gray-300'}`}>
+            <Compass size={22} strokeWidth={3} />
           </button>
-          <button
-            onClick={() => setCurrentView('mushaf')}
-            className={`flex flex-col items-center gap-2 transition-all duration-300 ${currentView === 'mushaf' ? 'text-[#1D1B4B] scale-110' : 'text-[#1D1B4B]/20 hover:text-[#1D1B4B]/40'}`}
-          >
-            <BookOpen size={24} strokeWidth={currentView === 'mushaf' ? 2.5 : 2} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">المصحف</span>
-          </button>
-          <button
-            onClick={() => setCurrentView('profile')}
-            className={`flex flex-col items-center gap-2 transition-all duration-300 ${currentView === 'profile' ? 'text-[#1D1B4B] scale-110' : 'text-[#1D1B4B]/20 hover:text-[#1D1B4B]/40'}`}
-          >
-            <User size={24} strokeWidth={currentView === 'profile' ? 2.5 : 2} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">ملفي</span>
+          <button onClick={() => setCurrentView('mushaf')} className={`flex flex-col items-center gap-1.5 transition-all ${currentView === 'mushaf' ? 'text-[#FF6B4A]' : 'text-gray-300'}`}>
+            <BookOpen size={22} strokeWidth={3} />
           </button>
         </div>
       </main>

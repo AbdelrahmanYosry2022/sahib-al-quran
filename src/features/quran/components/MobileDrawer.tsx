@@ -31,7 +31,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
       >
         <div className="flex flex-col h-full overflow-hidden">
 
-          {/* Header area in drawer - Logo at the VERY TOP - 4px vertical padding */}
+          {/* Header area in drawer - User requested 24px pt and 60% width */}
           <div className="w-full flex items-center justify-start pt-[24px]">
             <img
               src="/images/Sahib Al Quran.png"
@@ -40,14 +40,15 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
             />
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 py-6 pb-32 space-y-1 scrollbar-hide">
+          {/* Fixed Padding to match top */}
+          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-1 scrollbar-hide">
             {SURAH_LIST.map((surah) => (
               <button
                 key={surah.id}
                 onClick={() => onSelect(surah.id)}
                 className={`w-full group flex items-center justify-between p-3.5 rounded-2xl transition-all duration-300 shadow-none border-none outline-none ${selectedId === surah.id
-                  ? 'bg-[#1D1B4B] text-white' // Removed shadow-xl
-                  : 'bg-white/20 hover:bg-white/60 text-[#1D1B4B]/80'
+                    ? 'bg-[#1D1B4B] text-white'
+                    : 'bg-white/20 hover:bg-white/60 text-[#1D1B4B]/80'
                   }`}
               >
                 <div className="flex items-center gap-4">

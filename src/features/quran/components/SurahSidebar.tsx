@@ -19,15 +19,15 @@ export const SurahSidebar: React.FC<SurahSidebarProps> = ({ onSelect, selectedId
         />
       </div>
 
-      {/* Surah List */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 pb-20 space-y-1 scrollbar-hide no-scrollbar">
+      {/* Surah List - Fixed Padding to match top */}
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-1 scrollbar-hide no-scrollbar">
         {SURAH_LIST.map((surah) => (
           <button
             key={surah.id}
             onClick={() => onSelect(surah.id)}
             className={`w-full group flex items-center justify-between p-3 rounded-2xl transition-all duration-300 shadow-none border-none outline-none ${selectedId === surah.id
-              ? 'bg-[#1D1B4B] text-white shadow-none' // Removed shadow-lg
-              : 'bg-white/10 hover:bg-white/60 text-[#1D1B4B]/80 shadow-none'
+                ? 'bg-[#1D1B4B] text-white shadow-none'
+                : 'bg-white/10 hover:bg-white/60 text-[#1D1B4B]/80 shadow-none'
               }`}
           >
             <div className="flex items-center gap-4">

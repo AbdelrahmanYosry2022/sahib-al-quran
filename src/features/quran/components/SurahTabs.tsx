@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SurahDetail } from '../types';
 
 interface SurahTabsProps {
-  surah: SurahDetail;
+  surah: Partial<SurahDetail>;
 }
 
 const sections = [
@@ -27,8 +27,8 @@ export const SurahTabs: React.FC<SurahTabsProps> = ({ surah }) => {
             key={section.id}
             onClick={() => setActiveTab(section.id)}
             className={`flex items-center gap-2.5 px-5 py-3 whitespace-nowrap text-[13px] font-black transition-all duration-300 relative ${activeTab === section.id
-                ? 'text-[#1D1B4B]'
-                : 'text-[#1D1B4B]/30 hover:text-[#1D1B4B]/60'
+              ? 'text-[#1D1B4B]'
+              : 'text-[#1D1B4B]/30 hover:text-[#1D1B4B]/60'
               }`}
           >
             <span className="text-lg leading-none">{section.icon}</span>
