@@ -13,7 +13,6 @@ import {
   MessageCircle,
   PenTool,
   Bookmark,
-  Book,
   Search,
   Users,
   Mountain,
