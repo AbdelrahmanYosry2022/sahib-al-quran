@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import React from 'react';
 import { SURAH_LIST } from '../constants/surah-list';
 
 interface MobileDrawerProps {
@@ -27,26 +26,18 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
       {/* Drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-[85%] max-w-[340px] bg-[#fde2c5] z-[60] transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] transform ${isOpen ? 'translate-x-0' : 'translate-x-full'
-          } shadow-2xl`}
+          } shadow-none`}
         dir="rtl"
       >
         <div className="flex flex-col h-full overflow-hidden">
 
-          {/* Header area in drawer - Logo at the VERY TOP */}
-          <div className="pt-10 pb-4 px-6 relative">
-            <button
-              onClick={onClose}
-              className="absolute left-6 top-10 w-10 h-10 flex items-center justify-center text-[#1D1B4B]/40 hover:bg-white/40 rounded-full transition-all"
-            >
-              <X size={20} />
-            </button>
-            <div className="w-full mt-4">
-              <img
-                src="/images/Sahib Al Quran.png"
-                alt="صاحب القرآن"
-                className="w-full max-w-[180px] mx-auto object-contain"
-              />
-            </div>
+          {/* Header area in drawer - Logo at the VERY TOP - 4px vertical padding */}
+          <div className="w-full flex items-center justify-start pt-[24px]">
+            <img
+              src="/images/Sahib Al Quran.png"
+              alt="صاحب القرآن"
+              className="w-[60%] object-contain block"
+            />
           </div>
 
           <div className="flex-1 overflow-y-auto px-4 py-6 pb-32 space-y-1 scrollbar-hide">
@@ -54,9 +45,9 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
               <button
                 key={surah.id}
                 onClick={() => onSelect(surah.id)}
-                className={`w-full group flex items-center justify-between p-3.5 rounded-2xl transition-all duration-300 ${selectedId === surah.id
-                    ? 'bg-[#1D1B4B] text-white shadow-xl shadow-[#1D1B4B]/20'
-                    : 'bg-white/20 hover:bg-white/60 text-[#1D1B4B]/80'
+                className={`w-full group flex items-center justify-between p-3.5 rounded-2xl transition-all duration-300 shadow-none border-none outline-none ${selectedId === surah.id
+                  ? 'bg-[#1D1B4B] text-white' // Removed shadow-xl
+                  : 'bg-white/20 hover:bg-white/60 text-[#1D1B4B]/80'
                   }`}
               >
                 <div className="flex items-center gap-4">
