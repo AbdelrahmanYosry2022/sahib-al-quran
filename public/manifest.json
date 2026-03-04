@@ -1,0 +1,21 @@
+{
+    "name": "صاحب القرآن",
+    "short_name": "صاحب القرآن",
+    "description": "تطبيق صاحب القرآن لتدبر آيات الذكر الحكيم",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#fde2c5",
+    "icons": [
+        {
+            "src": "/images/image.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/image.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
